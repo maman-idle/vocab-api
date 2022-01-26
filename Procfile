@@ -1,0 +1,1 @@
+web: gunicorn vocab_api.wsgi

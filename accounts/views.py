@@ -1,7 +1,8 @@
 from rest_framework.response import Response
 from .serializers import accountSerializer, signUpSerializer, loginSerializer
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from django.contrib.auth.models import update_last_login
+from django.contrib.auth import logout
 
 
 class accountViewSet(generics.RetrieveAPIView):
@@ -26,7 +27,6 @@ class signUpViewSet(generics.GenericAPIView):
 
 
 class loginViewSet(generics.GenericAPIView):
-
     serializer_class = loginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -38,3 +38,10 @@ class loginViewSet(generics.GenericAPIView):
             "account": accountSerializer(account, context=self.get_serializer_context()).data,            
         })
 
+class logoutViewSet(generics.GenericAPIView):
+
+    def post(self, request):
+        logout(request)
+        return Response({
+            "message": 'Logged Out',            
+        }, status=status.HTTP_200_OK)
