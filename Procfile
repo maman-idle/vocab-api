@@ -1,3 +1,3 @@
-web: gunicorn vocab_api.wsgi
+web: gunicorn vocab_api.wsgi --log-file=-
 
-heroku run python manage.py collectstatic -c --noinput
+release: python manage.py collectstatic -c --noinput
