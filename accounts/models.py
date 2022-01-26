@@ -28,9 +28,9 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=100, unique=True, null=False)
-    name = models.CharField(max_length=50, null=False)
-    password = models.CharField(max_length=25, null=False)
+    email = models.EmailField(max_length=500, unique=True, null=False)
+    name = models.CharField(max_length=500, null=False)
+    password = models.CharField(max_length=500, null=False)
 
     # Required fields for custom user model
     date_joined = models.DateTimeField(auto_now_add=True)
