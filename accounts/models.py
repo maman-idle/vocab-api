@@ -26,6 +26,33 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self.db)
         return user
 
+    def create_superuser(self, email, name, password):
+        if not email:
+            raise ValueError('New user must have an email!')
+        if not name:
+            raise ValueError('New user must have a name!')
+        if not password:
+            raise ValueError('New user must have a password!')
+        
+        #create user instance
+        user = self.model(
+            email = self.normalize_email(email),
+            name = name,
+            password = password
+        )
+
+        #set password
+        user.set_password(password)
+
+        #set admin attribute
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+
+        #commit the new user
+        user.save(using=self.db)
+        return user
+
 
 class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=500, unique=True, null=False)

@@ -1,3 +1,8 @@
+import imp
 from django.contrib import admin
+from .models import word
 
-# Register your models here.
+class wordsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'owner', 'word', 'translate')
+
+admin.site.register(word, wordsAdmin)
