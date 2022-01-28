@@ -5,4 +5,6 @@ from .models import word
 class wordSerializers(serializers.ModelSerializer):
     class Meta:
         model = word
-        fields = '__all__'
+
+        #get id, word, and translate attributes
+        fields = ('id','word','translate')

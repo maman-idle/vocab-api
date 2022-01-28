@@ -15,4 +15,6 @@ class wordViewSet(viewsets.ModelViewSet):
 
     #configure the create for new word object
     def perform_create(self, serializer):
+
+        #set the default value of attribute owner to user id
         serializer.save(owner=self.request.user)

@@ -26,9 +26,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
+    'rest_framework.authtoken',
+
     'accounts',
     'words',
+
     'corsheaders'
 ]
 
@@ -50,6 +54,12 @@ AUTH_USER_MODEL = "accounts.Account"
 
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 TEMPLATES = [
     {
@@ -137,7 +147,7 @@ prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
 
 
-LOGGING = {
+""" LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
@@ -152,3 +162,4 @@ LOGGING = {
         },
     },
 }
+ """
