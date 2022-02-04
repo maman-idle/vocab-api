@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.core.exceptions import ValidationError
 
+
+#Limit Profile Picture Upload to 1MB
+def validate_image(image):
+    file_size = image.file.size
+    limit_mb = 1
+    if file_size > limit_mb * 1024 * 1024:  # 1kb = 1024b ; 1mb = 1024kb
+        raise ValidationError("Max size of file is %s MB" % limit_mb)
 
 class MyAccountManager(BaseUserManager):
     
@@ -58,6 +66,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=500, unique=True, null=False)
     name = models.CharField(max_length=500, null=False)
     password = models.CharField(max_length=500, null=False)
+    profile_pict = models.ImageField(upload_to='pp/', validators=[validate_image], blank=True)
 
     # Required fields for custom user model
     date_joined = models.DateTimeField(auto_now_add=True)
