@@ -1,5 +1,6 @@
 from pathlib import Path
 import os, dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #Cloudinary storage, just for image storage
+    'cloudinary_storage',
+    'cloudinary',
+
+    #DRF
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -54,6 +60,13 @@ AUTH_USER_MODEL = "accounts.Account"
 
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
+
+#Cloudinary Config.
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config("CLOUD_NAME"),
+    'API_KEY': config("API_KEY"),
+    'API_SECRET': config("API_SECRET")
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
