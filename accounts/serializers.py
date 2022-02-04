@@ -7,12 +7,12 @@ class accountSerializer(serializers.ModelSerializer):
     #configure the return form of an account, here object account will return 3 attributes
     class Meta:
         model = Account
-        fields = ('id', 'email', 'name')
+        fields = ('id', 'email', 'name', 'profile_pict')
 
 class signUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name', 'password', 'profile_pict')
         extra_kwargs = {'password': {'write_only': True}}
     
     #create new account serializer

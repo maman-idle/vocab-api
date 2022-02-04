@@ -66,6 +66,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=500, unique=True, null=False)
     name = models.CharField(max_length=500, null=False)
     password = models.CharField(max_length=500, null=False)
+
+    #upload profile picture with size <= 1MB to "media/pp/" directory in Cloudinary
     profile_pict = models.ImageField(upload_to='pp/', validators=[validate_image], blank=True)
 
     # Required fields for custom user model
