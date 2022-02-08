@@ -1,8 +1,9 @@
 from rest_framework.response import Response
-from .serializers import accountSerializer, signUpSerializer, loginSerializer
-from rest_framework import generics, permissions, status
+from .serializers import accountSerializer, signUpSerializer, loginSerializer, bannerSerializer
+from rest_framework import generics, permissions, status, viewsets
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import logout
+from .models import BannerBackground
 
 #Token Auth
 from rest_framework.authtoken.models import Token
@@ -63,3 +64,14 @@ class logoutViewSet(generics.GenericAPIView):
         return Response({
             "message": 'Logged Out',            
         }, status=status.HTTP_200_OK)
+
+class bannerViewSet(viewsets.ModelViewSet):
+    
+    permission_classes = [permissions.AllowAny]
+    serializer_class = bannerSerializer
+
+    def get_queryset(self):
+        return BannerBackground.objects.all()
+    
+    def perform_create(self, serializer):
+        serializer.save()

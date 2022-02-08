@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
+from django.forms import ImageField
 
 
 #Limit Profile Picture Upload to 1MB
@@ -9,6 +10,10 @@ def validate_image(image):
     limit_mb = 1
     if file_size > limit_mb * 1024 * 1024:  # 1kb = 1024b ; 1mb = 1024kb
         raise ValidationError("Max size of file is %s MB" % limit_mb)
+
+
+class BannerBackground(models.Model):
+    banner = models.ImageField(upload_to='banner/', validators=[validate_image], null=True)
 
 class MyAccountManager(BaseUserManager):
     
@@ -72,6 +77,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     #upload profile picture with size <= 1MB to "media/pp/" directory in Cloudinary
     profile_pict = models.ImageField(upload_to='pp/', validators=[validate_image], blank=True, null=True)
 
+    banner = models.OneToOneField(BannerBackground, on_delete=models.CASCADE, null=True)
+
     # Required fields for custom user model
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
@@ -89,3 +96,4 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.email
+

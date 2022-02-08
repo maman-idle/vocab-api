@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account
+from .models import Account, BannerBackground
 from django.contrib.auth import authenticate
 
 class accountSerializer(serializers.ModelSerializer):
@@ -39,3 +39,7 @@ class loginSerializer(serializers.Serializer):
         #else
         raise serializers.ValidationError("Incorrect Credentials!")
 
+class bannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BannerBackground
+        fields = "__all__"
