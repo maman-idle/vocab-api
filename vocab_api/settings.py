@@ -11,7 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
+#SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = os.getenv('SECRET_KEY', 'yes') #for heroku
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -63,12 +65,14 @@ AUTH_USER_MODEL = "accounts.Account"
 CORS_ORIGIN_ALLOW_ALL = True
 
 #Cloudinary Config.
+#The Cloudinary general config (project scope)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config("CLOUD_NAME"),
     'API_KEY': config("API_KEY"),
     'API_SECRET': config("API_SECRET")
 }
 
+#for calling cloudinary inside the .py files
 cloudinary.config(
     cloud_name = config("CLOUD_NAME"),
     api_key = config("API_KEY"),
