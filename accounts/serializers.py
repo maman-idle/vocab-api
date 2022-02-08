@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account, validate_image
+from .models import Account
 from django.contrib.auth import authenticate
 
 class accountSerializer(serializers.ModelSerializer):
