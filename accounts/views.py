@@ -1,11 +1,15 @@
-import imp
 from rest_framework.response import Response
 from .serializers import accountSerializer, signUpSerializer, loginSerializer
 from rest_framework import generics, permissions, status
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import logout
+
+#Token Auth
 from rest_framework.authtoken.models import Token
 
+#Media uploader
+from rest_framework.parsers import MultiPartParser, JSONParser
+from cloudinary import uploader
 
 class accountViewSet(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -18,9 +22,16 @@ class accountViewSet(generics.RetrieveAPIView):
 class signUpViewSet(generics.GenericAPIView):
     serializer_class = signUpSerializer
 
+    #enable end-point to process image
+    parser_classes = (
+        MultiPartParser,
+        JSONParser
+    )
+
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
         serializer.is_valid(raise_exception=True)
+        
         account = serializer.save()
         update_last_login(None, account)
         return Response({

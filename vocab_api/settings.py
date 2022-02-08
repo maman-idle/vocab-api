@@ -1,6 +1,7 @@
 from pathlib import Path
 import os, dj_database_url
 from decouple import config
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,6 +68,17 @@ CLOUDINARY_STORAGE = {
     'API_KEY': config("API_KEY"),
     'API_SECRET': config("API_SECRET")
 }
+
+cloudinary.config(
+    cloud_name = config("CLOUD_NAME"),
+    api_key = config("API_KEY"),
+    api_secret = config("API_SECRET")
+)
+
+#File upload handler
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

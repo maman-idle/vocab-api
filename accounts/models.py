@@ -4,15 +4,16 @@ from django.core.exceptions import ValidationError
 
 
 #Limit Profile Picture Upload to 1MB
-def validate_image(image):
-    file_size = image.file.size
+def validate_image(image):    
+    file_size = image.size    
     limit_mb = 1
     if file_size > limit_mb * 1024 * 1024:  # 1kb = 1024b ; 1mb = 1024kb
         raise ValidationError("Max size of file is %s MB" % limit_mb)
 
 class MyAccountManager(BaseUserManager):
     
-    def create_user(self, email, name, password):
+    #Main function for creating a user
+    def create_user(self, email, name, password, profile_pict):
         if not email:
             raise ValueError('New user must have an email!')
         if not name:
@@ -24,7 +25,8 @@ class MyAccountManager(BaseUserManager):
         user = self.model(
             email = self.normalize_email(email),
             name = name,
-            password = password
+            password = password,
+            profile_pict = profile_pict
         )
 
         #set password
@@ -68,7 +70,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=500, null=False)
 
     #upload profile picture with size <= 1MB to "media/pp/" directory in Cloudinary
-    profile_pict = models.ImageField(upload_to='pp/', validators=[validate_image], blank=True)
+    profile_pict = models.ImageField(upload_to='pp/', validators=[validate_image], blank=True, null=True)
 
     # Required fields for custom user model
     date_joined = models.DateTimeField(auto_now_add=True)

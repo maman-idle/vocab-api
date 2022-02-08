@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Account
+from .models import Account, validate_image
 from django.contrib.auth import authenticate
 
 class accountSerializer(serializers.ModelSerializer):
@@ -16,9 +16,11 @@ class signUpSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
     
     #create new account serializer
-    def create(self, validated_data):        
+    def create(self, validated_data):
+
+        #call the create_user method inside the MyAccountManager
         account = Account.objects.create_user(
-            validated_data['email'], validated_data['name'], validated_data['password']
+            validated_data['email'], validated_data['name'], validated_data['password'], validated_data['profile_pict'],
         )
         return account
 
