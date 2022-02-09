@@ -1,6 +1,11 @@
 from pathlib import Path
 import os, dj_database_url
 from decouple import config
+
+
+""" Cloudinary starts below here, install cloudinary and Pillow using pip to start managing your dynamic
+files, and then import cloudinary to setup the configuration.Next step is including the cloudinary 
+inside the installed apps in the settings.py"""
 import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #Cloudinary storage, just for image storage
+    #Cloudinary storage, just for image storage. We don't want to override the staticfiles config,
+    # so we put the cloudinary apps UNDER the staticfiles apps. 
     'cloudinary_storage',
     'cloudinary',
 
@@ -65,21 +71,25 @@ AUTH_USER_MODEL = "accounts.Account"
 CORS_ORIGIN_ALLOW_ALL = True
 
 #Cloudinary Config.
-#The Cloudinary general config (project scope)
+#The Cloudinary general config (project scope), I use .env file to store the sensitive data and access
+# it using decouple library. You NEED to manually setup the env variables in Heroku if you want to 
+# use decouple because the git won't upload the .env files.
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config("CLOUD_NAME"),
     'API_KEY': config("API_KEY"),
     'API_SECRET': config("API_SECRET")
 }
 
-#for calling cloudinary inside the .py files
+#configuration for importing cloudinary directly into your python package/class.
 cloudinary.config(
     cloud_name = config("CLOUD_NAME"),
     api_key = config("API_KEY"),
     api_secret = config("API_SECRET")
 )
 
-#File upload handler
+#File upload handler, use it to handle file uploaded into a temporary file location.
+# Important for checking file size befor uploading to Cloudinary.
+# Check the image validation inside models.py. 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
@@ -153,20 +163,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
 STATIC_URL = '/static/'
-
-
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
    ]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/staticfiles')
-
 #  Add configuration for static files storage using whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-#Dynamic Media using Cloudinary Storage
+# Dynamic Media using Cloudinary Storage, the media url tells Cloudinary to create 'media' folder,
+# inside your Cloudinary account. That will be the main directory for storing files for your Cloudinary
+# in this project. You can designate the sub-folder by using 'upload_to' parameter inside the models.py.
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 

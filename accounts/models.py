@@ -1,17 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.exceptions import ValidationError
-from django.forms import ImageField
 
 
-#Limit Profile Picture Upload to 1MB
+#Limit Profile Picture Upload to 1MB, we can use the size attribute because we store the uploaded files,
+# into a temporary location beforehand.
 def validate_image(image):    
     file_size = image.size    
     limit_mb = 1
     if file_size > limit_mb * 1024 * 1024:  # 1kb = 1024b ; 1mb = 1024kb
         raise ValidationError("Max size of file is %s MB" % limit_mb)
 
-
+# The 'upload_to' parameter will append its value to the the MEDIA_URL value in the settings.py,
+# to determine the final directory of the uploaded file in the Cloudinary.
 class BannerBackground(models.Model):
     banner = models.ImageField(upload_to='banner/', validators=[validate_image], null=True)
 

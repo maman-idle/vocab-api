@@ -12,13 +12,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, JSONParser
 from cloudinary import uploader
 
+
 class accountViewSet(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = accountSerializer
 
     def get_object(self):
         return self.request.user
-
 
 class signUpViewSet(generics.GenericAPIView):
     serializer_class = signUpSerializer
@@ -39,7 +39,6 @@ class signUpViewSet(generics.GenericAPIView):
             "account": accountSerializer(account, context=self.get_serializer_context()).data,
             "token": Token.objects.get_or_create(user=account)[0].key
         })
-
 
 class loginViewSet(generics.GenericAPIView):
     serializer_class = loginSerializer
