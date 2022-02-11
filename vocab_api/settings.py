@@ -2,6 +2,10 @@ from pathlib import Path
 import os, dj_database_url
 from decouple import config
 
+#Firebase
+import firebase_admin
+from firebase_admin import credentials
+
 
 """ Cloudinary starts below here, install cloudinary and Pillow using pip to start managing your dynamic
 files, and then import cloudinary to setup the configuration.Next step is including the cloudinary 
@@ -11,23 +15,15 @@ import cloudinary
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = config("SECRET_KEY")
 SECRET_KEY = os.getenv('SECRET_KEY', 'yes') #for heroku
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,7 +44,10 @@ INSTALLED_APPS = [
     'accounts',
     'words',
 
-    'corsheaders'
+    'corsheaders',
+
+    #Firebase Cloud Messaging
+    'fcm_django'
 ]
 
 MIDDLEWARE = [
@@ -98,6 +97,31 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ]
+}
+
+#Firebase Config
+CRED = credentials.Certificate(os.path.join(BASE_DIR, 'test-fcm1-3ee49-firebase-adminsdk-4850y-3a048fe562.json'))
+""" CRED = credentials.Certificate({
+        'type':config("TYPE"),
+        'project_id':config("PROJECT_ID"),
+        'private_key_id':config("PRIVATE_KEY_ID"),
+        'private_key': config('PRIVATE_KEY'),
+        'client_email': config("CLIENT_EMAIL"),
+        'client_id': config("CLIENT_ID"),
+        'auth_uri': config("AUTH_URI"),
+        'token_uri': config("TOKEN_URI"),
+        'auth_provider_x509_cert_url': config("AUTH_PROVIDER_X509_CERT_URL"),
+        'client_x509_cert_url': config("CLIENT_X509_CERT_URL")
+    }) """
+
+firebase_admin.initialize_app(CRED)
+
+#FCM_DJANGO Settings
+FCM_DJANGO_SETTINGS = {
+    "APP_VERBOSE_NAME": "vocab_API",
+    "ONE_DEVICE_PER_USER": True,
+    "DELETE_INACTIVE_DEVICES": False,
+    "UPDATE_ON_DUPLICATE_REG_ID": True
 }
 
 TEMPLATES = [
