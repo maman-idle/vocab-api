@@ -2,7 +2,7 @@ import imp
 from os import name
 from django import views
 from django.urls import path
-from .views import signUpViewSet, loginViewSet, accountViewSet, logoutViewSet, bannerViewSet
+from .views import signUpViewSet, loginViewSet, accountViewSet, logoutViewSet, bannerViewSet, FCMDeviceViewSet
 from rest_framework import routers
 
 #for request token using email and password (doesnt work with custom user)
@@ -12,6 +12,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 bannerRouter = routers.DefaultRouter()
 bannerRouter.register('api/banner', bannerViewSet, basename='banner')
 
+fcmRouter = routers.DefaultRouter()
+fcmRouter.register('api/device', FCMDeviceViewSet, basename='FCM-Device')
+
 urlpatterns = [
     path('api/user/signup/', signUpViewSet.as_view()),
     path('api/user/login/', loginViewSet.as_view()),
@@ -20,3 +23,4 @@ urlpatterns = [
 ]
 
 urlpatterns += bannerRouter.urls
+urlpatterns += fcmRouter.urls

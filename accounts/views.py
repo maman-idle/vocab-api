@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from .serializers import accountSerializer, signUpSerializer, loginSerializer, bannerSerializer
+from .serializers import accountSerializer, signUpSerializer, loginSerializer, bannerSerializer, fcmDeviceSerializer
 from rest_framework import generics, permissions, status, viewsets
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import logout
@@ -11,6 +11,10 @@ from rest_framework.authtoken.models import Token
 #Media uploader
 from rest_framework.parsers import MultiPartParser, JSONParser
 from cloudinary import uploader
+
+#Firebase Cloud Messaging
+from firebase_admin.messaging import Message, Notification
+from fcm_django.models import FCMDevice
 
 
 class accountViewSet(generics.RetrieveAPIView):
@@ -74,3 +78,21 @@ class bannerViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save()
+
+        #Sending the message
+        device = FCMDevice.objects.all().first()
+        device.send_message(Message(
+            notification=Notification(
+                title="Yo!", 
+                body="Banner has been Uploaded Bitches!"),
+                ))
+
+class FCMDeviceViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = fcmDeviceSerializer
+
+    def get_queryset(self):
+        return FCMDevice.objects.all()
+
+    def perform_create(self, serializer):
+        return serializer.save()

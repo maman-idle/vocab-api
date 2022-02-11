@@ -1,6 +1,9 @@
+from dataclasses import field
 from rest_framework import serializers
 from .models import Account, BannerBackground
 from django.contrib.auth import authenticate
+
+from fcm_django.models import FCMDevice
 
 class accountSerializer(serializers.ModelSerializer):
 
@@ -42,4 +45,9 @@ class loginSerializer(serializers.Serializer):
 class bannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BannerBackground
+        fields = "__all__"
+
+class fcmDeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FCMDevice
         fields = "__all__"
